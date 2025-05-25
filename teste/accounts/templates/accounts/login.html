@@ -3,23 +3,142 @@
 {% block title %}Login - {{ block.super }}{% endblock %}
 
 {% block content %}
-<h2>Login</h2>
+<div class="login-container">
+    <div class="login-box">
+        <h2>Bem-vindo de volta!</h2>
+        <p class="login-subtitle">Entre para acessar seus cursos</p>
 
-<form method="post">
-    {% csrf_token %}
-    
-    <div class="form-group">
-        <label for="username">Nome de Usuário:</label>
-        <input type="text" name="username" id="username" required>
+        <form method="post" class="login-form">
+            {% csrf_token %}
+            
+            {% if messages %}
+            <div class="alert alert-danger">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <div class="form-group">
+                <label for="username">
+                    <i class="fas fa-user"></i>
+                    Nome de Usuário
+                </label>
+                <input type="text" name="username" id="username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">
+                    <i class="fas fa-lock"></i>
+                    Senha
+                </label>
+                <input type="password" name="password" id="password" required>
+            </div>
+
+            <button type="submit" class="btn btn-login">Entrar</button>
+        </form>
+
+        <p class="signup-link">Não tem uma conta? <a href="{% url 'accounts:cadastro' %}">Cadastre-se</a></p>
     </div>
+</div>
 
-    <div class="form-group">
-        <label for="password">Senha:</label>
-        <input type="password" name="password" id="password" required>
-    </div>
+<style>
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 200px);
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        margin: -40px -5.5% 0;
+        padding: 40px 20px;
+    }
 
-    <button type="submit" class="btn">Entrar</button>
-</form>
+    .login-box {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 16px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        width: 100%;
+        max-width: 400px;
+        animation: fadeIn 0.6s ease-out;
+    }
 
-<p>Não tem uma conta? <a href="{% url 'accounts:cadastro' %}">Cadastre-se</a></p>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-box h2 {
+        color: var(--secondary-color);
+        margin: 0 0 0.5rem;
+        font-size: 1.75rem;
+        text-align: center;
+    }
+
+    .login-subtitle {
+        color: #666;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .login-form .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .login-form .form-group label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--secondary-color);
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .login-form .form-group input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #eee;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .login-form .form-group input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    }
+
+    .btn-login {
+        width: 100%;
+        padding: 0.875rem;
+        font-size: 1.1rem;
+        margin-top: 1rem;
+        background: linear-gradient(45deg, var(--primary-color), #357abd);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(74, 144, 226, 0.2);
+    }
+
+    .signup-link {
+        text-align: center;
+        margin-top: 1.5rem;
+        color: #666;
+    }
+
+    .signup-link a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s ease;
+    }
+
+    .signup-link a:hover {
+        color: var(--secondary-color);
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 {% endblock %}

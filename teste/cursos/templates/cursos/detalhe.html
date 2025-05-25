@@ -1,0 +1,213 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}{{ curso.titulo }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="curso-detalhe-container">
+    <div class="curso-header">
+        <h1>{{ curso.titulo }}</h1>
+        <div class="curso-meta">
+            <span class="instrutor">
+                <i class="fas fa-chalkboard-teacher"></i>
+                {{ curso.instrutor.get_full_name }}
+            </span>
+            <span class="data-criacao">
+                <i class="fas fa-calendar-alt"></i>
+                Criado em {{ curso.data_criacao|date:"d/m/Y" }}
+            </span>
+        </div>
+    </div>
+
+    <div class="curso-content">
+        <div class="curso-descricao">
+            <h2>Sobre o Curso</h2>
+            <p>{{ curso.descricao }}</p>
+        </div>
+
+        <div class="curso-info-box">
+            <div class="info-item">
+                <i class="fas fa-users"></i>
+                <span>Alunos Inscritos</span>
+                <strong>{{ curso.alunos.count }}</strong>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-clock"></i>
+                <span>Duração Estimada</span>
+                <strong>{{ curso.duracao_horas }} horas</strong>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-star"></i>
+                <span>Nível</span>
+                <strong>{{ curso.get_nivel_display }}</strong>
+            </div>
+        </div>
+
+        <div class="curso-detalhes">
+            {% if curso.pre_requisitos %}
+            <div class="detalhe-section">
+                <h3><i class="fas fa-list-check"></i> Pré-requisitos</h3>
+                <p>{{ curso.pre_requisitos }}</p>
+            </div>
+            {% endif %}
+
+            <div class="detalhe-section">
+                <h3><i class="fas fa-bullseye"></i> Objetivos de Aprendizagem</h3>
+                <p>{{ curso.objetivos }}</p>
+            </div>
+
+            <div class="detalhe-section">
+                <h3><i class="fas fa-users"></i> Público-alvo</h3>
+                <p>{{ curso.publico_alvo }}</p>
+            </div>
+
+            {% if curso.materiais %}
+            <div class="detalhe-section">
+                <h3><i class="fas fa-book"></i> Materiais Complementares</h3>
+                <p>{{ curso.materiais }}</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="curso-acoes">
+            {% if user.is_authenticated %}
+                {% if user in curso.alunos.all %}
+                    <button class="btn btn-success" disabled>
+                        <i class="fas fa-check-circle"></i>
+                        Inscrito
+                    </button>
+                {% else %}
+                    <form method="post" action="{% url 'cursos:inscrever' curso.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-graduation-cap"></i>
+                            Inscrever-se
+                        </button>
+                    </form>
+                {% endif %}
+            {% else %}
+                <a href="{% url 'accounts:login' %}" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Faça login para se inscrever
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .curso-detalhe-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .curso-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .curso-header h1 {
+        font-size: 2.5rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+
+    .curso-meta {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        color: #666;
+    }
+
+    .curso-meta span {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .curso-content {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .curso-descricao {
+        margin-bottom: 2rem;
+    }
+
+    .curso-descricao h2 {
+        color: var(--secondary-color);
+        margin-bottom: 1rem;
+    }
+
+    .curso-info-box {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        background: var(--background-color);
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+    }
+
+    .info-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 0.5rem;
+    }
+
+    .info-item i {
+        font-size: 1.5rem;
+        color: var(--primary-color);
+    }
+
+    .info-item span {
+        color: #666;
+    }
+
+    .info-item strong {
+        font-size: 1.2rem;
+        color: var(--secondary-color);
+    }
+
+    .curso-acoes {
+        text-align: center;
+        margin-top: 2rem;
+    }
+
+    .btn {
+        padding: 0.75rem 2rem;
+        font-size: 1.1rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .btn-success {
+        background: #28a745;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: not-allowed;
+        opacity: 0.8;
+    }
+
+    .btn-primary {
+        background: linear-gradient(45deg, var(--primary-color), #357abd);
+        color: white;
+        border: none;
+        border-radius: 8px;
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}

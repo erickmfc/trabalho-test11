@@ -1,0 +1,112 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Editar Curso - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-box">
+        <h2>Editar Curso</h2>
+        <p class="form-subtitle">Atualize as informações do seu curso</p>
+
+        <form method="post" class="create-form">
+            {% csrf_token %}
+            
+            {% if messages %}
+            <div class="alert alert-danger">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <div class="form-group">
+                <label for="titulo">
+                    <i class="fas fa-book"></i>
+                    Título do Curso
+                </label>
+                <input type="text" name="titulo" id="titulo" value="{{ curso.titulo }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="descricao">
+                    <i class="fas fa-align-left"></i>
+                    Descrição do Curso
+                </label>
+                <textarea name="descricao" id="descricao" rows="6" required>{{ curso.descricao }}</textarea>
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'cursos:detalhe' curso.id %}" class="btn btn-outline">Cancelar</a>
+                <button type="submit" class="btn">Salvar Alterações</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .form-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 2rem 0;
+    }
+
+    .form-box {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        width: 100%;
+        max-width: 600px;
+    }
+
+    .form-box h2 {
+        color: var(--secondary-color);
+        margin: 0 0 0.5rem;
+        font-size: 1.75rem;
+    }
+
+    .form-subtitle {
+        color: #666;
+        margin-bottom: 2rem;
+    }
+
+    .create-form .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--secondary-color);
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-group textarea {
+        resize: vertical;
+        min-height: 120px;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+        margin-top: 2rem;
+    }
+
+    .btn-outline {
+        background: transparent;
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    .btn-outline:hover {
+        background: var(--primary-color);
+        color: white;
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}

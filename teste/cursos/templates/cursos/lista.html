@@ -1,0 +1,63 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Cursos - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="curso-list-header">
+    <h2>Cursos Disponíveis</h2>
+    {% if user.is_authenticated and user.profile.tipo_usuario == 'instrutor' %}
+    <a href="{% url 'cursos:criar' %}" class="btn">Criar Novo Curso</a>
+    {% endif %}
+</div>
+
+<div class="curso-list">
+    {% if cursos %}
+        {% for curso in cursos %}
+        <div class="curso-item">
+            <div class="curso-content">
+                <h4>{{ curso.titulo }}</h4>
+                <p>{{ curso.descricao|truncatewords:30 }}</p>
+                <small>Instrutor: {{ curso.instrutor.get_full_name|default:curso.instrutor.username }}</small>
+                <small>Criado em: {{ curso.data_criacao|date:"d/m/Y" }}</small>
+                <div class="curso-actions">
+                    <a href="{% url 'cursos:detalhe' curso.id %}" class="btn">Ver Detalhes</a>
+                    {% if user.is_authenticated and user.profile.tipo_usuario == 'aluno' and not curso in user.inscricoes.all %}
+                    <a href="{% url 'cursos:inscrever' curso.id %}" class="btn btn-outline">Inscrever-se</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p class="empty-state">Nenhum curso disponível no momento.</p>
+    {% endif %}
+</div>
+
+<style>
+    .curso-list-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .curso-list-header h2 {
+        margin: 0;
+        color: var(--secondary-color);
+    }
+
+    .empty-state {
+        text-align: center;
+        color: #666;
+        font-size: 1.1rem;
+        grid-column: 1 / -1;
+        padding: 2rem;
+    }
+
+    .curso-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+</style>
+{% endblock %}

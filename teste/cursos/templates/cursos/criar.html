@@ -1,0 +1,164 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Criar Curso - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-box">
+        <h2>Criar Novo Curso</h2>
+        <p class="form-subtitle">Compartilhe seu conhecimento criando um novo curso</p>
+
+        <form method="post" class="create-form">
+            {% csrf_token %}
+            
+            {% if messages %}
+            <div class="alert alert-danger">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <div class="form-group">
+                <label for="titulo">
+                    <i class="fas fa-book"></i>
+                    Título do Curso
+                </label>
+                <input type="text" name="titulo" id="titulo" required>
+            </div>
+
+            <div class="form-group">
+                <label for="descricao">
+                    <i class="fas fa-align-left"></i>
+                    Descrição do Curso
+                </label>
+                <textarea name="descricao" id="descricao" rows="6" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="duracao_horas">
+                    <i class="fas fa-clock"></i>
+                    Duração (em horas)
+                </label>
+                <input type="number" name="duracao_horas" id="duracao_horas" min="1" required>
+            </div>
+
+            <div class="form-group">
+                <label for="nivel">
+                    <i class="fas fa-signal"></i>
+                    Nível do Curso
+                </label>
+                <select name="nivel" id="nivel" required>
+                    <option value="iniciante">Iniciante</option>
+                    <option value="intermediario">Intermediário</option>
+                    <option value="avancado">Avançado</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="pre_requisitos">
+                    <i class="fas fa-list-check"></i>
+                    Pré-requisitos
+                </label>
+                <textarea name="pre_requisitos" id="pre_requisitos" rows="4"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="objetivos">
+                    <i class="fas fa-bullseye"></i>
+                    Objetivos de Aprendizagem
+                </label>
+                <textarea name="objetivos" id="objetivos" rows="4" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="publico_alvo">
+                    <i class="fas fa-users"></i>
+                    Público-alvo
+                </label>
+                <textarea name="publico_alvo" id="publico_alvo" rows="4" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="materiais">
+                    <i class="fas fa-file-alt"></i>
+                    Materiais Complementares
+                </label>
+                <textarea name="materiais" id="materiais" rows="4"></textarea>
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'cursos:lista' %}" class="btn btn-outline">Cancelar</a>
+                <button type="submit" class="btn">Criar Curso</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .form-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 2rem 0;
+    }
+
+    .form-box {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        width: 100%;
+        max-width: 600px;
+    }
+
+    .form-box h2 {
+        color: var(--secondary-color);
+        margin: 0 0 0.5rem;
+        font-size: 1.75rem;
+    }
+
+    .form-subtitle {
+        color: #666;
+        margin-bottom: 2rem;
+    }
+
+    .create-form .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--secondary-color);
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-group textarea {
+        resize: vertical;
+        min-height: 120px;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+        margin-top: 2rem;
+    }
+
+    .btn-outline {
+        background: transparent;
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    .btn-outline:hover {
+        background: var(--primary-color);
+        color: white;
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}
