@@ -3,26 +3,94 @@
 {% block title %}Cadastro - {{ block.super }}{% endblock %}
 
 {% block content %}
-<h2>Cadastro de Novo Usuário</h2>
+<div class="login-container">
+    <div class="login-box">
+        <h2>Crie sua conta</h2>
+        <p class="login-subtitle">Comece sua jornada de aprendizado</p>
 
-<form method="post">
-    {% csrf_token %}
-    
-    <div class="form-group">
-        {{ form.as_p }}
+        <form method="post" class="login-form">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">
+                    <i class="fas fa-user"></i>
+                    Nome de Usuário
+                </label>
+                {{ form.username }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.password1.id_for_label }}">
+                    <i class="fas fa-lock"></i>
+                    Senha
+                </label>
+                {{ form.password1 }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.password2.id_for_label }}">
+                    <i class="fas fa-lock"></i>
+                    Confirme a Senha
+                </label>
+                {{ form.password2 }}
+            </div>
+
+            <div class="form-group">
+                <label for="tipo_usuario">
+                    <i class="fas fa-graduation-cap"></i>
+                    Tipo de Usuário
+                </label>
+                <select name="tipo_usuario" id="tipo_usuario" required>
+                    <option value="">Selecione...</option>
+                    <option value="aluno">Aluno</option>
+                    <option value="instrutor">Instrutor</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-login">Criar Conta</button>
+        </form>
+
+        <p class="signup-link">Já tem uma conta? <a href="{% url 'accounts:login' %}">Faça login</a></p>
     </div>
+</div>
 
-    <div class="form-group">
-        <label for="tipo_usuario">Tipo de Usuário:</label>
-        <select name="tipo_usuario" id="tipo_usuario" required>
-            <option value="">Selecione...</option>
-            <option value="aluno">Aluno</option>
-            <option value="instrutor">Instrutor</option>
-        </select>
-    </div>
+<style>
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #eee;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
 
-    <button type="submit" class="btn">Cadastrar</button>
-</form>
+    .form-group input:focus,
+    .form-group select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    }
 
-<p>Já tem uma conta? <a href="{% url 'accounts:login' %}">Faça login</a></p>
+    .form-group select {
+        background-color: white;
+        cursor: pointer;
+    }
+
+    .form-group .helptext {
+        display: block;
+        font-size: 0.875rem;
+        color: #666;
+        margin-top: 0.5rem;
+    }
+
+    .form-group ul.errorlist {
+        list-style: none;
+        padding: 0;
+        margin: 0.5rem 0;
+        color: var(--accent-color);
+        font-size: 0.875rem;
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 {% endblock %}

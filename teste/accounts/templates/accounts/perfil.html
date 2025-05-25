@@ -3,36 +3,194 @@
 {% block title %}Perfil - {{ block.super }}{% endblock %}
 
 {% block content %}
-<h2>Seu Perfil</h2>
-
-<form method="post">
-    {% csrf_token %}
-    
-    <div class="form-group">
-        <label for="first_name">Nome:</label>
-        <input type="text" name="first_name" id="first_name" value="{{ user.first_name }}">
+<div class="profile-container">
+    <div class="profile-header">
+        <div class="profile-avatar">
+            <i class="fas fa-user-circle"></i>
+        </div>
+        <h2>Seu Perfil</h2>
     </div>
 
-    <div class="form-group">
-        <label for="last_name">Sobrenome:</label>
-        <input type="text" name="last_name" id="last_name" value="{{ user.last_name }}">
-    </div>
+    <div class="profile-box">
+        <form method="post" class="profile-form">
+            {% csrf_token %}
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="first_name">
+                        <i class="fas fa-user"></i>
+                        Nome
+                    </label>
+                    <input type="text" name="first_name" id="first_name" value="{{ user.first_name }}" placeholder="Seu nome">
+                </div>
 
-    <div class="form-group">
-        <label for="email">E-mail:</label>
-        <input type="email" name="email" id="email" value="{{ user.email }}">
-    </div>
+                <div class="form-group">
+                    <label for="last_name">
+                        <i class="fas fa-user"></i>
+                        Sobrenome
+                    </label>
+                    <input type="text" name="last_name" id="last_name" value="{{ user.last_name }}" placeholder="Seu sobrenome">
+                </div>
+            </div>
 
-    <div class="form-group">
-        <label for="bio">Biografia:</label>
-        <textarea name="bio" id="bio" rows="4">{{ user.profile.bio }}</textarea>
-    </div>
+            <div class="form-group">
+                <label for="email">
+                    <i class="fas fa-envelope"></i>
+                    E-mail
+                </label>
+                <input type="email" name="email" id="email" value="{{ user.email }}" placeholder="seu.email@exemplo.com">
+            </div>
 
-    <div class="form-group">
-        <p><strong>Tipo de Usuário:</strong> {{ user.profile.get_tipo_usuario_display }}</p>
-        <p><strong>Data de Cadastro:</strong> {{ user.profile.data_cadastro|date:"d/m/Y" }}</p>
-    </div>
+            <div class="form-group">
+                <label for="bio">
+                    <i class="fas fa-book"></i>
+                    Biografia
+                </label>
+                <textarea name="bio" id="bio" rows="4" placeholder="Conte um pouco sobre você...">{{ user.profile.bio }}</textarea>
+            </div>
 
-    <button type="submit" class="btn">Salvar Alterações</button>
-</form>
+            <div class="profile-info">
+                <div class="info-item">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Tipo de Usuário:</span>
+                    <strong>{{ user.profile.get_tipo_usuario_display }}</strong>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Data de Cadastro:</span>
+                    <strong>{{ user.profile.data_cadastro|date:"d/m/Y" }}</strong>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i>
+                Salvar Alterações
+            </button>
+        </form>
+    </div>
+</div>
+
+<style>
+    .profile-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .profile-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 1rem;
+        background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .profile-avatar i {
+        font-size: 4rem;
+        color: white;
+    }
+
+    .profile-box {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .profile-form {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .form-group label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-group label i {
+        color: var(--primary-color);
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #eee;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    }
+
+    .profile-info {
+        background: var(--background-color);
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .info-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .info-item i {
+        color: var(--primary-color);
+        width: 20px;
+    }
+
+    .info-item span {
+        color: #666;
+    }
+
+    .info-item strong {
+        margin-left: auto;
+        color: var(--secondary-color);
+    }
+
+    .btn-primary {
+        width: 100%;
+        margin-top: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-size: 1.1rem;
+        background: linear-gradient(45deg, var(--primary-color), #357abd);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(74, 144, 226, 0.2);
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 {% endblock %}

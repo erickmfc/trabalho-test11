@@ -5,84 +5,218 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Plataforma de Cursos{% endblock %}</title>
     <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --background-color: #f5f6fa;
+            --text-color: #2c3e50;
+        }
+        
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             margin: 0;
             padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
         }
+        
         .container {
-            width: 80%;
+            width: 90%;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
+        
         .navbar {
-            background-color: #333;
+            background-color: var(--secondary-color);
             color: white;
             padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
+        
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1rem;
+        }
+
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-logo {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-right: 2rem;
+        }
+        
         .navbar a {
             color: white;
             text-decoration: none;
-            margin-right: 1rem;
+            margin-left: 2rem;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
         }
+        
+        .navbar a:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
         .content {
-            padding: 20px;
+            padding: 40px 0;
+            min-height: calc(100vh - 200px);
         }
+        
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
+        
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--secondary-color);
         }
+        
         .form-group input,
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 0.5rem;
-            margin-bottom: 1rem;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background-color: white;
         }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+        
         .btn {
             display: inline-block;
-            padding: 0.5rem 1rem;
-            background-color: #007bff;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary-color);
             color: white;
             text-decoration: none;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
+        
         .btn:hover {
-            background-color: #0056b3;
+            background-color: #357abd;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
+        
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+        
         .alert {
             padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
+        
         .alert-success {
             background-color: #d4edda;
             color: #155724;
+            border-left: 4px solid #28a745;
         }
+        
         .alert-danger {
             background-color: #f8d7da;
             color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .curso-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .curso-item {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .curso-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.1);
+        }
+        
+        .curso-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .curso-item h4 {
+            color: var(--secondary-color);
+            margin: 0 0 1rem 0;
+            font-size: 1.25rem;
+        }
+        
+        .curso-item p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        .curso-item small {
+            color: #888;
+            display: block;
+            margin-bottom: 1rem;
         }
     </style>
 </head>
 <body>
     <nav class="navbar">
         <div class="container">
-            <a href="/">Início</a>
-            {% if user.is_authenticated %}
-                <a href="{% url 'accounts:painel' %}">Painel</a>
-                <a href="{% url 'accounts:perfil' %}">Perfil</a>
-                <a href="{% url 'accounts:logout' %}">Sair</a>
-            {% else %}
-                <a href="{% url 'accounts:login' %}">Entrar</a>
-                <a href="{% url 'accounts:cadastro' %}">Cadastrar</a>
-            {% endif %}
+            <div class="nav-left">
+                <a href="/" class="nav-logo">Plataforma de Cursos</a>
+                <a href="{% url 'accounts:login' %}">Login</a>
+                <a href="{% url 'cursos:lista' %}">Cursos</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'accounts:painel' %}">Painel</a>
+                {% endif %}
+            </div>
+            <div class="nav-right">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'accounts:perfil' %}">Perfil</a>
+                    <a href="{% url 'accounts:logout' %}">Sair</a>
+                {% else %}
+                    <a href="{% url 'accounts:login' %}">Entrar</a>
+                    <a href="{% url 'accounts:cadastro' %}">Cadastrar</a>
+                {% endif %}
+            </div>
         </div>
     </nav>
 

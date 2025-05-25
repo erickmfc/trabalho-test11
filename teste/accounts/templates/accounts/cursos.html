@@ -1,0 +1,365 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Cursos{% endblock %}
+
+{% block content %}
+<div class="cursos-container">
+    {% if user.is_instructor %}
+    <div class="create-curso-section">
+        <h2>Criar Novo Curso</h2>
+        <form method="post" enctype="multipart/form-data" class="create-curso-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="titulo">Título do Curso</label>
+                <input type="text" id="titulo" name="titulo" required placeholder="Ex: Mestria em Fotografia Digital">
+            </div>
+            
+            <div class="form-group">
+                <label for="descricao_curta">Descrição Curta</label>
+                <textarea id="descricao_curta" name="descricao_curta" required placeholder="Uma breve descrição que capture a essência do seu curso"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="descricao_completa">Descrição Completa</label>
+                <textarea id="descricao_completa" name="descricao_completa" required placeholder="Descreva detalhadamente o conteúdo e objetivos do curso"></textarea>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group half-width">
+                    <label for="nivel">Nível</label>
+                    <select id="nivel" name="nivel" required>
+                        <option value="iniciante">Iniciante</option>
+                        <option value="intermediario">Intermediário</option>
+                        <option value="avancado">Avançado</option>
+                    </select>
+                </div>
+                
+                <div class="form-group half-width">
+                    <label for="duracao">Duração (horas)</label>
+                    <input type="number" id="duracao" name="duracao" required min="1">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="preco">Preço (R$)</label>
+                <input type="number" id="preco" name="preco" required min="0" step="0.01">
+            </div>
+            
+            <div class="form-group">
+                <label for="imagem">Imagem de Capa</label>
+                <input type="file" id="imagem" name="imagem" accept="image/*" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="video_apresentacao">Vídeo de Apresentação (opcional)</label>
+                <input type="url" id="video_apresentacao" name="video_apresentacao" placeholder="Link do YouTube">
+            </div>
+            
+            <div class="form-group">
+                <label for="objetivos">Objetivos de Aprendizado</label>
+                <textarea id="objetivos" name="objetivos" required placeholder="Liste os principais objetivos de aprendizado"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="requisitos">Pré-requisitos</label>
+                <textarea id="requisitos" name="requisitos" required placeholder="Liste os conhecimentos ou equipamentos necessários"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="publico_alvo">Público-Alvo</label>
+                <textarea id="publico_alvo" name="publico_alvo" required placeholder="Descreva para quem este curso é ideal"></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Criar Curso</button>
+        </form>
+    </div>
+    {% endif %}
+
+    <div class="cursos-list">
+        <h2>Cursos Disponíveis</h2>
+        {% if cursos %}
+            {% for curso in cursos %}
+            <div class="curso-card">
+                <div class="curso-image">
+                    <img src="{{ curso.imagem.url }}" alt="{{ curso.titulo }}">
+                </div>
+                <div class="curso-content">
+                    <h3>{{ curso.titulo }}</h3>
+                    <p class="curso-description">{{ curso.descricao_curta }}</p>
+                    <div class="curso-meta">
+                        <span><i class="fas fa-signal"></i> {{ curso.nivel|title }}</span>
+                        <span><i class="fas fa-clock"></i> {{ curso.duracao }} horas</span>
+                        <span><i class="fas fa-star"></i> {{ curso.avaliacao_media|default:"Novo" }}</span>
+                    </div>
+                    <div class="curso-instructor">
+                        <img src="{{ curso.instrutor.foto.url }}" alt="{{ curso.instrutor.nome }}">
+                        <span>{{ curso.instrutor.nome }}</span>
+                    </div>
+                    <div class="curso-price">
+                        <span class="price">R$ {{ curso.preco }}</span>
+                    </div>
+                    <a href="{% url 'curso_detalhes' curso.id %}" class="btn btn-primary">Ver Detalhes</a>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-book-open fa-3x"></i>
+                <p>Nenhum curso disponível no momento.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    :root {
+        --primary-color: #2563eb;
+        --primary-hover: #1d4ed8;
+        --secondary-color: #64748b;
+        --accent-color: #f59e0b;
+        --background-light: #f8fafc;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+        --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+        --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+        --radius-default: 12px;
+    }
+
+    .cursos-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        background-color: var(--background-light);
+    }
+
+    .create-curso-section {
+        background: white;
+        padding: 2.5rem;
+        border-radius: var(--radius-default);
+        box-shadow: var(--shadow-md);
+        margin-bottom: 3.5rem;
+    }
+
+    .create-curso-form {
+        display: grid;
+        gap: 1.75rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+        font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background-color: white;
+        transition: border-color 0.2s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+
+    .half-width {
+        width: 100%;
+    }
+
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--primary-hover);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .cursos-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 2.5rem;
+    }
+
+    .curso-card {
+        background: white;
+        border-radius: var(--radius-default);
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: var(--shadow-sm);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .curso-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .curso-image {
+        height: 220px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .curso-image::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+    }
+
+    .curso-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .curso-card:hover .curso-image img {
+        transform: scale(1.05);
+    }
+
+    .curso-content {
+        padding: 1.75rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .curso-content h3 {
+        color: var(--text-primary);
+        font-size: 1.25rem;
+        margin-bottom: 0.75rem;
+        line-height: 1.4;
+    }
+
+    .curso-description {
+        color: var(--text-secondary);
+        margin: 0.75rem 0;
+        line-height: 1.6;
+        flex-grow: 1;
+    }
+
+    .curso-meta {
+        display: flex;
+        gap: 1.25rem;
+        margin: 1rem 0;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .curso-meta span {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .curso-meta i {
+        color: var(--accent-color);
+    }
+
+    .curso-instructor {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin: 1.25rem 0;
+        padding-top: 1rem;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .curso-instructor img {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid white;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .curso-instructor span {
+        color: var(--text-primary);
+        font-weight: 500;
+    }
+
+    .curso-price {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--primary-color);
+        margin: 1rem 0;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: var(--radius-default);
+        grid-column: 1 / -1;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .empty-state i {
+        color: var(--accent-color);
+        margin-bottom: 1.5rem;
+        font-size: 3.5rem;
+    }
+
+    .empty-state p {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+    }
+
+    @media (max-width: 768px) {
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+
+        .cursos-container {
+            padding: 1rem;
+        }
+
+        .curso-card {
+            margin: 0 0.5rem;
+        }
+
+        .curso-meta {
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}
