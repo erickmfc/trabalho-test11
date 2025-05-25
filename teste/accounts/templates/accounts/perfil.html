@@ -1,0 +1,38 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Perfil - {{ block.super }}{% endblock %}
+
+{% block content %}
+<h2>Seu Perfil</h2>
+
+<form method="post">
+    {% csrf_token %}
+    
+    <div class="form-group">
+        <label for="first_name">Nome:</label>
+        <input type="text" name="first_name" id="first_name" value="{{ user.first_name }}">
+    </div>
+
+    <div class="form-group">
+        <label for="last_name">Sobrenome:</label>
+        <input type="text" name="last_name" id="last_name" value="{{ user.last_name }}">
+    </div>
+
+    <div class="form-group">
+        <label for="email">E-mail:</label>
+        <input type="email" name="email" id="email" value="{{ user.email }}">
+    </div>
+
+    <div class="form-group">
+        <label for="bio">Biografia:</label>
+        <textarea name="bio" id="bio" rows="4">{{ user.profile.bio }}</textarea>
+    </div>
+
+    <div class="form-group">
+        <p><strong>Tipo de Usuário:</strong> {{ user.profile.get_tipo_usuario_display }}</p>
+        <p><strong>Data de Cadastro:</strong> {{ user.profile.data_cadastro|date:"d/m/Y" }}</p>
+    </div>
+
+    <button type="submit" class="btn">Salvar Alterações</button>
+</form>
+{% endblock %}
