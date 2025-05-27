@@ -11,7 +11,7 @@ class Curso(models.Model):
     titulo = models.CharField(max_length=200)
     descricao = models.TextField()
     instrutor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cursos_criados')
-    duracao_horas = models.PositiveIntegerField(help_text='Duração total do curso em horas')
+    duracao_horas = models.PositiveIntegerField(help_text='Duração total do curso em horas', default=0)
     nivel = models.CharField(max_length=20, choices=NIVEL_CHOICES, default='iniciante')
     pre_requisitos = models.TextField(blank=True, help_text='Pré-requisitos necessários para o curso')
     objetivos = models.TextField(help_text='Objetivos de aprendizagem do curso')
